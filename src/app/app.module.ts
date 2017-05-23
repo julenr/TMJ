@@ -11,6 +11,8 @@ import { TgButtonsModule } from '@trademe/tangram/components/buttons';
 
 import { MainComponent } from './Main/main.component';
 
+import { Component1Module } from './Component1/component1.module';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -18,7 +20,8 @@ import { MainComponent } from './Main/main.component';
     TmApiModule.forRoot(),
     TangramModule.forRoot(),
     TgTeleporterModule,
-    TgButtonsModule
+    TgButtonsModule,
+    Component1Module
   ],
   declarations: [MainComponent],
   bootstrap: [MainComponent]

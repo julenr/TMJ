@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'trade-me-jobs',
-  templateUrl: './main.component.html',
-  styleUrls: [ './main.component.scss' ],
+  template: '<component-one ></component-one>',
 })
-export class MainComponent {
-  name = 'Jobs';
-}
+export class MainComponent {}

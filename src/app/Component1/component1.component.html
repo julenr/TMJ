@@ -1,0 +1,42 @@
+
+<div class="desktop-header__nav-item">
+  <h5>Trade Me {{name}}</h5>
+  <input #box (keyup)="0">
+  <p>{{box.value}}</p>
+  <button
+      tgButton
+      tgStyle="secondary"
+      class="welcome-banner__return-button"
+  >
+      This is a Tangram Button
+
+  </button>
+  <tg-button-group
+        class="h-margin-y"
+        fitAcross>
+        <a tgButton
+            routerLink="/jobs">
+            Jobs
+        </a>
+        <a tgButton
+            routerLink="/motors">
+            Motors
+        </a>
+        <a tgButton
+            routerLink="/property">
+            Property
+        </a>
+        <a tgButton
+            routerLink="/services">
+            Services
+        </a>
+    </tg-button-group>
+    <tg-icon
+        alt="Close modal"
+        name="function-cross">
+    </tg-icon>
+  <tg-svg
+      class="welcome-banner__kevin welcome-banner__kevin--descended"
+      [svg]="kevinPeekBottomSvg">
+  </tg-svg>
+</div>

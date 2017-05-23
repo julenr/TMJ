@@ -86,10 +86,11 @@ const common = {
         include: [PATHS.appSource, path.resolve('node_modules/@trademe')]
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif)$/,
         use: ['url-loader?limit=40000&name=assets/images/[name].[ext]'],
         include: [PATHS.appSource, path.resolve('node_modules/@trademe')]
       },
+      { test: /\.svg/, loader: 'svg-inline-loader?removeSVGTagAttrs=false' },
       {
         test: /\.html$/,
         use: ['raw-loader'],
@@ -172,36 +173,18 @@ if (TARGET === 'build' || TARGET === 'build:tcity') {
   webPackModuleExport = merge(common, {
     devtool: checkTool(),
     entry: {
-      vendor: vendorPkgs,
-      indexInlined: PATHS.indexInlined
+      vendor: vendorPkgs
     },
     output: {
-      path: PATHS.build,
       filename: '[name].[chunkhash].js'
     },
     module: {
       rules: [
         {
-          test: /^((?!shared\.scss$).)*\.scss$/,
+          test: /\.(scss|css)$/,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: 'css-loader?minimize=true!postcss-loader!sass-loader'
-          }),
-          include: PATHS.appSource
-        },
-        {
-          test: /shared\.scss$/,
-          use: extractSharedCSS.extract({
-            fallback: 'style-loader',
-            use: 'css-loader?minimize=true!postcss-loader!sass-loader'
-          }),
-          include: PATHS.appSource
-        },
-        {
-          test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader?minimize=true!postcss-loader'
           }),
           include: PATHS.appSource
         }
@@ -265,18 +248,6 @@ if (TARGET === 'build' || TARGET === 'build:tcity') {
           negate_iife: false
         }
       })
-      // ,
-      // TODO: Seems that entryOnly doesn't work and banner is applied to all files
-      // Using a template string breaks the rendered ascii somehow ¯\_(ツ)_/¯
-      // new webpack.BannerPlugin({
-      //     banner: " _____              _        __  __      \r\n"
-      //             + "|_   _| __ __ _  __| | ___  |  \\/  | ___    __ _\r\n"
-      //             + "  | || '__/ _` |/ _` |/ _ \\ | |\\/| |/ _ \\  /  ('>--\r\n"
-      //             + "  | || | | (_| | (_| |  __/ | |  | |  __/  \\__/\r\n"
-      //             + "  |_||_|  \\__,_|\\__,_|\\___| |_|  |_|\\___|   L\\_\r\n"
-      //             + "  L i f e     l i v e s     h e r e\r\n",
-      //     raw: false, entryOnly: true
-      // })
     ]
   });
 }
