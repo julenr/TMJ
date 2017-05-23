@@ -9,9 +9,8 @@
     "build": "tsc -p src/",
     "build:watch": "tsc -p src/ -w",
     "serve": "lite-server -c=bs-config.json",
-    
-    "start": "cross-env NODE_ENV=development node build/webpack/serve/server.js",
-
+    "start:one": "cross-env NODE_ENV=development node build/webpack/serve/server.js",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack/webpack.config.js --cert=./build/webpack/serve/localhost.crt --key=./build/webpack/serve/localhost.key --progress",
     "prestart:ngway": "npm run build",
     "start:ngway": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "pretest": "npm run build",
@@ -39,32 +38,58 @@
     "zone.js": "0.8.9"
   },
   "devDependencies": {
+    "@ngtools/webpack": "^1.3.1",
+    "@types/core-js": "0.9.41",
+    "@types/jasmine": "2.5.47",
     "@types/node": "^6.0.46",
-    "@types/jasmine": "2.5.36",
     "autoprefixer": "6.7.7",
     "awesome-typescript-loader": "3.1.2",
-    "concurrently": "^3.2.0",
-    "lite-server": "^2.2.2",
-    "typescript": "2.3.1",
-    "awesome-typescript-loader": "3.1.2",
-    "cross-env": "3.1.3",
-
     "canonical-path": "0.0.2",
-    "tslint": "5.1.0",
-    "tslint-loader": "3.5.3",
-    "lodash": "4.17.4",
+    "clean-webpack-plugin": "0.1.16",
+    "concurrently": "^3.2.0",
+    "copy-webpack-plugin": "4.0.1",
+    "cross-env": "3.1.3",
+    "css-loader": "0.28.2",
+    "extract-text-webpack-plugin": "2.1.0",
+    "html-webpack-plugin": "2.28.0",
     "jasmine-core": "~2.4.1",
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "lite-server": "^2.2.2",
+    "lodash": "4.17.4",
+    "node-sass": "4.5.2",
+    "postcss": "5.2.17",
+    "postcss-loader": "^2.0.5",
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
-
+    "sha1": "1.1.1",
+    "tslint": "5.1.0",
+    "tslint-loader": "3.5.3",
+    "typescript": "2.3.1",
     "webpack": "2.5.1",
     "webpack-dev-server": "2.4.5",
     "webpack-merge": "4.1.0"
   },
-  "repository": {}
+  "postcss": {
+    "plugins": {
+      "postcss-import": {
+        "path": "source/client/styles"
+      },
+      "postcss-cssnext": {
+        "browsers": [
+          "> 5%",
+          "Explorer 11",
+          "Edge > 13",
+          "Firefox >= 50",
+          "Chrome >= 55",
+          "Safari >= 9",
+          "Opera >= 22",
+          "Android >= 4.1"
+        ]
+      }
+    }
+  }
 }
