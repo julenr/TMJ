@@ -8,11 +8,8 @@
   "scripts": {
     "build": "tsc -p src/",
     "build:watch": "tsc -p src/ -w",
-    "serve": "lite-server -c=bs-config.json",
-    "start:one": "cross-env NODE_ENV=development node build/webpack/serve/server.js",
+    "serve": "cross-env NODE_ENV=development node build/webpack/serve/server.js",
     "start": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack/webpack.config.js --cert=./build/webpack/serve/localhost.crt --key=./build/webpack/serve/localhost.key --progress",
-    "prestart:ngway": "npm run build",
-    "start:ngway": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "pretest": "npm run build",
     "test": "concurrently \"npm run build:watch\" \"karma start karma.conf.js\"",
     "pretest:once": "npm run build",
@@ -32,13 +29,11 @@
     "@trademe/api": "0.7.13",
     "@trademe/tangram": "0.3.1-PDT-1543-dev-experience.0",
     "angular-in-memory-web-api": "~0.3.0",
-    "systemjs": "~0.19.40",
     "core-js": "2.4.1",
     "rxjs": "5.3.0",
     "zone.js": "0.8.9"
   },
   "devDependencies": {
-    "@ngtools/webpack": "^1.3.1",
     "@types/core-js": "0.9.41",
     "@types/jasmine": "2.5.47",
     "@types/node": "^6.0.46",

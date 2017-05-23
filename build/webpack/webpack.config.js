@@ -83,8 +83,10 @@ const common = {
             loader: `awesome-typescript-loader?{configFileName: "tsconfig.json"}`
           }
         ],
-        enforce: 'pre',
-        include: PATHS.appSource
+        include: [
+          PATHS.appSource,
+          path.resolve('node_modules/@trademe/tangram')
+        ]
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
