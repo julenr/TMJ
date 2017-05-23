@@ -8,7 +8,6 @@ const webpack = require('webpack');
 const Clean = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const autoprefixer = require('autoprefixer');
 const sha1 = require('sha1');
 const chalk = require('chalk');
 const pkg = require('../../package.json');
@@ -81,22 +80,20 @@ const common = {
         use: [
           {
             loader: `awesome-typescript-loader?{configFileName: "tsconfig.json"}`
-          }
+          },
+          'angular2-template-loader'
         ],
-        include: [
-          PATHS.appSource,
-          path.resolve('node_modules/@trademe/tangram')
-        ]
+        include: [PATHS.appSource, path.resolve('node_modules/@trademe')]
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         use: ['url-loader?limit=40000&name=assets/images/[name].[ext]'],
-        include: PATHS.appSource
+        include: [PATHS.appSource, path.resolve('node_modules/@trademe')]
       },
       {
         test: /\.html$/,
-        use: ['html-loader?exportAsEs6Default'],
-        include: PATHS.appSource
+        use: ['raw-loader'],
+        include: [PATHS.appSource, path.resolve('node_modules/@trademe')]
       }
     ]
   },
@@ -114,14 +111,24 @@ if (TARGET === 'start' || !TARGET) {
     module: {
       rules: [
         {
-          test: /\.scss$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-          include: PATHS.appSource
-        },
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader'],
-          include: PATHS.appSource
+          test: /\.(scss|css)$/,
+          use: [
+            'to-string-loader',
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+                includePaths: ['node_modules']
+              }
+            }
+          ]
         }
       ]
     },
@@ -140,7 +147,7 @@ if (TARGET === 'start' || !TARGET) {
       https: true,
       port: process.env.PORT || 5000,
       host: 'localhost',
-      open: true,
+      open: false,
       proxy: {
         '/ngapi/**': {
           target: `http://api.test${testServer}.trademe.co.nz`,
@@ -159,15 +166,8 @@ if (TARGET === 'start' || !TARGET) {
 }
 
 if (TARGET === 'build' || TARGET === 'build:tcity') {
-  // Gather Vendor Modules for Vendor Chunk except Tangram
+  // Gather Vendor Modules for Vendor Chunk
   const vendorPkgs = Object.keys(pkg.dependencies);
-  vendorPkgs.splice(vendorPkgs.indexOf('tangram'), 1);
-  vendorPkgs.splice(vendorPkgs.indexOf('trademe-ui-router'), 1);
-  // To generate Tangram icons file hash file
-  const tangramIconsFileHash = sha1(
-    fs.readFileSync('./node_modules/tangram/images/icons.svg')
-  );
-  const extractSharedCSS = new ExtractTextPlugin('shared.[chunkhash].css');
 
   webPackModuleExport = merge(common, {
     devtool: checkTool(),
