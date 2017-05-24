@@ -103,7 +103,15 @@ const common = {
       /angular(\\|\/)core(\\|\/)@angular/,
       PATHS.appSource
     )
-  ]
+  ],
+  node: {
+      global: true,
+      crypto: 'empty',
+      process: true,
+      module: false,
+      clearImmediate: false,
+      setImmediate: false
+    }
 };
 
 if (TARGET === 'start' || !TARGET) {
@@ -182,15 +190,36 @@ if (TARGET === 'build' || TARGET === 'build:tcity') {
       rules: [
         {
           test: /\.(scss|css)$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader?minimize=true!postcss-loader!sass-loader'
-          }),
-          include: PATHS.appSource
+          use: ['to-string-loader'].concat(
+            ExtractTextPlugin.extract({
+              use: [
+                {
+                  loader: 'css-loader',
+                  options: { sourceMap: false, url: false }
+                },
+                {
+                  loader: 'postcss-loader',
+                  options: {
+                    sourceMap: false
+                  }
+                },
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sourceMap: false,
+                    includePaths: ['node_modules']
+                  }
+                }
+              ]
+            })
+          )
         }
       ]
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        Reflect: 'core-js/es7/reflect'
+      }),
       new webpack.LoaderOptionsPlugin({
         minimize: true,
         debug: false,
@@ -250,37 +279,6 @@ if (TARGET === 'build' || TARGET === 'build:tcity') {
       })
     ]
   });
-}
-
-if (TARGET === 'test' || TARGET === 'tdd' || TARGET === 'test:tcity') {
-  webPackModuleExport = merge(common, {
-    bail: TARGET === 'test',
-    devtool: checkTool(),
-    module: {
-      noParse: [/sinon/],
-      rules: [
-        {
-          test: /\.(scss|css)$/,
-          use: ['null-loader'],
-          include: PATHS.appSource
-        }
-      ]
-    },
-    plugins: [
-      new webpack.NormalModuleReplacementPlugin(
-        /^sinon$/,
-        'vendor/sinon-1.17.2.js'
-      )
-    ]
-  });
-  if (NPM_PARAMS.sourcemap && TARGET !== 'test:tcity') {
-    webPackModuleExport.module.rules.push({
-      test: /^((?!\.spec\.ts$).)*\.ts$/,
-      use: ['istanbul-instrumenter-loader'],
-      include: PATHS.appSource,
-      enforce: 'post'
-    });
-  }
 }
 
 module.exports = webPackModuleExport;

@@ -1,6 +1,7 @@
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import './polyfills.browser';
 import './rxjs.imports';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
 
 import { AppModule } from './app/app.module';
 

@@ -6,3 +6,7 @@ import 'zone.js/dist/long-stack-trace-zone';
 import 'ts-helpers';
 import 'intl';
 import 'intl/locale-data/jsonp/en.js';
+
+
+//const promiseFinally = require('promise.prototype.finally');
+//promiseFinally.shim();
